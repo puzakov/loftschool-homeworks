@@ -92,12 +92,6 @@ class Form extends Component {
     });
   };
 
-  checkEmpty = (value, fieldName) => {
-    if (value.length === 0) {
-      this.setFieldError('' + this.state[fieldName].toLowerCase(), fieldName);
-    }
-  };
-
   render() {
     return (
       <div className="app-container">
