@@ -1,24 +1,7 @@
 import React, { Fragment, Component, PureComponent } from 'react';
 import SectionTitle from '../SectionTitle';
-import LoginForm from '../LoginForm';
-import { AuthConsumer } from '../../contexts/Auth';
 import PropTypes from 'prop-types';
 import './Layout.css';
-
-const CongratsNode = () => {
-  return (
-    <p className="t-congratulation">
-      <span role="img" aria-label="congratulations!">
-        🎉
-      </span>
-      Поздравляем!{' '}
-      <span role="img" aria-label="congratulations!">
-        🎉
-      </span>
-      <br /> Вы вошли в систему!
-    </p>
-  );
-};
 
 class Layout extends PureComponent {
   static propTypes = {
@@ -27,7 +10,7 @@ class Layout extends PureComponent {
   };
 
   render() {
-    const { header, footer } = this.props;
+    const { header, footer, children } = this.props;
     let mainBlokClass = 'main';
     mainBlokClass += header ? ' main--with-header' : '';
     mainBlokClass += footer ? ' main--with-footer' : '';
@@ -39,15 +22,7 @@ class Layout extends PureComponent {
         {header && <Header />}
         <main className={mainBlokClass}>
           <SectionTitle className="main__title">Main</SectionTitle>
-          <AuthConsumer>
-            {authItems => {
-              return authItems.isAuthorized ? (
-                <CongratsNode />
-              ) : (
-                <LoginForm {...authItems} />
-              );
-            }}
-          </AuthConsumer>
+          {children}
         </main>
         {footer && <Footer />}
       </Fragment>
