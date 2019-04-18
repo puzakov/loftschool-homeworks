@@ -14,8 +14,8 @@ class Layout extends PureComponent {
     let mainBlokClass = 'main';
     mainBlokClass += header ? ' main--with-header' : '';
     mainBlokClass += footer ? ' main--with-footer' : '';
-    const Header = () => this.renderHeader(header);
-    const Footer = () => this.renderFooter(footer);
+    const Header = this.renderHeader(header);
+    const Footer = this.renderFooter(footer);
 
     return (
       <Fragment>
@@ -30,8 +30,8 @@ class Layout extends PureComponent {
   }
 
   renderHeader(HeaderChild) {
-    // return class extends Component {
-      // render() {
+    return class extends Component {
+      render() {
         console.log('Rendering HEADER');
         return (
           <header className="header">
@@ -39,21 +39,21 @@ class Layout extends PureComponent {
             <HeaderChild {...this.props} />
           </header>
         );
-    //   }
-    // };
+      }
+    };
   }
 
   renderFooter(FooterChild) {
-    // return class extends Component {
-    //   render() {
+    return class extends Component {
+      render() {
         return (
           <footer className="footer">
             <SectionTitle className="header__title">Footer</SectionTitle>
             <FooterChild {...this.props} />
           </footer>
         );
-    //   }
-    // };
+      }
+    };
   }
 }
 
