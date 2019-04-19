@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Show.css';
 
 const showKeyMatcher = {
   house: 118,
@@ -9,47 +10,52 @@ const showKeyMatcher = {
 class Show extends Component {
   state = {
     showId: null,
-    data: {}
+    data: {
+      genres: [],
+      name: '',
+      summary: '',
+      image: []
+    }
   };
 
-  componentDidUpdate = () => {
-    const { showId: showKey } = this.props;
-    const { showId } = this.state;
-    this.setState(
-      {
-        showId: showKeyMatcher[showKey]
-      },
-      () => {
-        fetch(`http://api.tvmaze.com/shows/${showId}`)
-          .then(response => response.json())
-          .then(({ genres, name, summary, image }) => {
-            this.setState({ data: { genres, name, summary, image } });
-          });
-      }
-    );
+  componentDidUpdate = (
+    { showId: prevPropShowId },
+    { showId: prevStateShowId }
+  ) => {
+    const { showId } = this.props;
+    if (prevPropShowId === showId) {
+      return;
+    }
+    console.log(prevPropShowId + '=>' + showId);
+
+    fetch(`http://api.tvmaze.com/shows/${showKeyMatcher[showId]}`)
+      .then(response => response.json())
+      .then(({ genres, name, summary, image }) => {
+        this.setState({
+          showId: showId,
+          data: { genres, name, summary, image }
+        });
+      });
   };
 
   render() {
-    return (
+    const { showId, data } = this.state;
+    console.log(data);
+    return showId ? (
       <div className="show">
-        <img
-          class="show-image"
-          src="http://static.tvmaze.com/uploads/images/original_untouched/43/109527.jpg"
-          alt="House"
+        <img className="show-image" src={data.image.original} alt={data.name} />
+        <h2 className="show-label t-show-name">{data.name}</h2>
+        <p className="show-text t-show-genre">
+          <b>Жанр: </b>
+          {data.genres.join(', ')}
+        </p>
+        <p
+          className="show-text t-show-summary"
+          dangerouslySetInnerHTML={{ __html: data.summary }}
         />
-        <h2 class="show-label t-show-name">House</h2>
-        <p class="show-text t-show-genre">
-          <b>Жанр: </b>Drama, Mystery, Medical
-        </p>
-        <p className="show-text t-show-summary">
-          <p>
-            Sink your teeth into meaty drama and intrigue with <b>House</b>,
-            FOX's take on mystery, where the villain is a medical malady and the
-            hero is an irreverent, controversial doctor who trusts no one, least
-            of all his patients.
-          </p>
-        </p>
       </div>
+    ) : (
+      <p className="show-inforation t-show-info">Шоу не выбрано</p>
     );
   }
 }
