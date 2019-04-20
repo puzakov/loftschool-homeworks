@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
+import { getShowInfo } from '../../api';
 import './Show.css';
-
-const showKeyMatcher = {
-  house: 118,
-  santaBarbara: 5909,
-  bigBang: 66
-};
 
 class Show extends Component {
   state = {
@@ -18,24 +13,18 @@ class Show extends Component {
     }
   };
 
-  componentDidUpdate = (
-    { showId: prevPropShowId },
-    { showId: prevStateShowId }
-  ) => {
+  componentDidUpdate = ({ showId: prevPropShowId }) => {
     const { showId } = this.props;
     if (prevPropShowId === showId) {
       return;
     }
-    console.log(prevPropShowId + '=>' + showId);
 
-    fetch(`http://api.tvmaze.com/shows/${showKeyMatcher[showId]}`)
-      .then(response => response.json())
-      .then(({ genres, name, summary, image }) => {
-        this.setState({
-          showId: showId,
-          data: { genres, name, summary, image }
-        });
+    getShowInfo(showId).then(({ genres, name, summary, image }) => {
+      this.setState({
+        showId: showId,
+        data: { genres, name, summary, image }
       });
+    });
   };
 
   render() {
