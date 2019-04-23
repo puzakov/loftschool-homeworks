@@ -14,24 +14,96 @@ class Todo extends PureComponent {
     return biggest + 1;
   }
 
-  handleChange = event => {};
+  handleChange = event => {
+    this.setState({ inputValue: event.target.value });
+  };
 
-  createNewRecordByEnter = event => {};
+  createNewRecordByEnter = event => {
+    if (event.key === 'Enter') {
+      this.createNewRecord();
+    }
+  };
 
-  toggleRecordComplete = event => {};
+  findItemIndexById = id => {
+    const { savedData } = this.props;
 
-  createNewRecord = () => {};
+    for (let i = 0; i < savedData.length; i++) {
+      if (savedData[i]['id'] == id) {
+        return i;
+      }
+    }
+  };
+
+  toggleRecordComplete = event => {
+    event.persist();
+    const { todoId } = event.target.dataset;
+    const { saveData, savedData } = this.props;
+    const index = this.findItemIndexById(todoId);
+    const item = { ...savedData[index] };
+    Object.assign(item, { isChecked: !item.isChecked });
+    saveData(item, index);
+  };
+
+  createNewRecord = () => {
+    const { inputValue } = this.state;
+    const { saveData } = this.props;
+
+    saveData({
+      id: this.getId(),
+      text: inputValue,
+      isChecked: false
+    });
+
+    this.setState({ inputValue: '' });
+  };
 
   render() {
-    return;
+    const { savedData } = this.props;
+
+    return (
+      <Card title="Список дел">
+        <div className="todo t-todo-list">
+          {this.renderEmptyRecord()}
+          {savedData.length > 0 &&
+            savedData.map(record => this.renderRecord(record))}
+        </div>
+      </Card>
+    );
   }
 
   renderEmptyRecord() {
-    return;
+    const { inputValue } = this.state;
+    return (
+      <div className="todo-item todo-item-new">
+        <input
+          className="todo-input t-input"
+          placeholder="Введите задачу"
+          value={inputValue}
+          onChange={this.handleChange}
+          onKeyPress={this.createNewRecordByEnter}
+        />
+        <span className="plus t-plus" onClick={this.createNewRecord}>
+          +
+        </span>
+      </div>
+    );
   }
 
   renderRecord = record => {
-    return;
+    const { id, text, isChecked } = record;
+
+    return (
+      <div key={id} className="todo-item t-todo">
+        <p className="todo-item__text">{text}</p>
+        <span
+          className="todo-item__flag t-todo-complete-flag"
+          data-todo-id={id}
+          onClick={this.toggleRecordComplete}
+        >
+          [{isChecked ? 'x' : ' '}]
+        </span>
+      </div>
+    );
   };
 }
 
