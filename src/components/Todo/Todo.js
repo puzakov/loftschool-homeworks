@@ -48,6 +48,8 @@ class Todo extends PureComponent {
     const { inputValue } = this.state;
     const { saveData } = this.props;
 
+    if (!inputValue.length) return;
+
     saveData({
       id: this.getId(),
       text: inputValue,
