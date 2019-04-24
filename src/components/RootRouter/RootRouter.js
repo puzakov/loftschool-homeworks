@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import PrivateRoute from '../PrivateRoute';
+import PrivateRoute, { loginPath } from '../PrivateRoute';
 import LoginForm from '../LoginForm';
 import AppRouter from '../AppRouter';
 import { AuthProvider } from '../../context/Auth';
@@ -28,6 +28,9 @@ export default () => (
             /app будет использовать AppRouter в качестве вью
             /login будет использовать LoginForm
           */}
+          <PrivateRoute path="/app" loginPath={loginPath} component={AppRouter} />
+          <Route path={loginPath} component={LoginForm} />
+          <Redirect to="/app" />
         </Switch>
       </BrowserRouter>
     </AuthProvider>

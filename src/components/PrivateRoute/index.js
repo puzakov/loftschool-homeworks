@@ -1,1 +1,1 @@
-export { default } from './PrivateRoute';
+export { default, loginPath } from './PrivateRoute';
