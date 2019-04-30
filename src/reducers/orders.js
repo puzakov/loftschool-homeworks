@@ -50,6 +50,7 @@ export default (state = [], action) => {
       };
       return state.map(order => {
         if (order.id !== action.payload) return order;
+        if (order.position === 'conveyor_1') return order;
         return { ...order, position: positions[order.position] };
       });
     }
