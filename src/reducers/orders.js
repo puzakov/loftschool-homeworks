@@ -21,7 +21,6 @@ export default (state = [], action) => {
         }
       ];
     case MOVE_ORDER_NEXT: {
-      const order = state.find(item => item.id === action.payload);
       const positions = {
         clients: 'conveyor_1',
         conveyor_1: 'conveyor_2',
@@ -29,30 +28,30 @@ export default (state = [], action) => {
         conveyor_3: 'conveyor_4',
         conveyor_4: 'finish'
       };
-
-      if (order.position === 'conveyor_4') {
+      return state.map(order => {
+        if (order.id !== action.payload) return order;
+        const result = { ...order, position: positions[order.position] };
+        if (order.position !== 'conveyor_4') return result;
         const isFinished = order.recipe.reduce(
           (result, value) =>
             result && order.ingredients.findIndex(item => item === value) > -1,
           true
         );
-        if (!isFinished) return state;
-      }
-      const newPosition = positions[order.position];
-      if (positions[order.position]) order.position = newPosition;
-      return [...state];
+        if (isFinished) return result;
+        else return order;
+      });
     }
     case MOVE_ORDER_BACK: {
-      const order = state.find(item => item.id === action.payload);
       const positions = {
         conveyor_2: 'conveyor_1',
         conveyor_3: 'conveyor_2',
         conveyor_4: 'conveyor_3',
         finish: 'conveyor_4'
       };
-      const newPosition = positions[order.position];
-      if (positions[order.position]) order.position = newPosition;
-      return [...state];
+      return state.map(order => {
+        if (order.id !== action.payload) return order;
+        return { ...order, position: positions[order.position] };
+      });
     }
     case ADD_INGREDIENT:
       const { from, ingredient } = action.payload;
