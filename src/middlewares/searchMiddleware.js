@@ -6,3 +6,24 @@
 // В случае ошибки searchFailure
 
 // На забудьте вызвать метод next.
+import {
+  fetchSearchRequest,
+  fetchSearchSuccess,
+  fetchSearchFailure
+} from '../actions';
+import { search } from '../api';
+
+export default (store) => next => action => {
+  console.log(action);
+
+  if (action.type === fetchSearchRequest.toString()) {
+    search(action.payload)
+      .then(data => {
+        store.dispatch(fetchSearchSuccess(data));
+      })
+      .catch(error => {
+        store.dispatch(fetchSearchFailure(error));
+      });
+  }
+  return next(action);
+};
