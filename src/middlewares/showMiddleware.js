@@ -13,14 +13,13 @@ import {
 import { show } from '../api';
 
 export default store => next => action => {
-  console.log(action);
-
   if (action.type === fetchShowRequest.toString()) {
     show(action.payload)
       .then(data => {
         store.dispatch(fetchShowSuccess(data));
       })
       .catch(error => {
+        console.log(error);
         store.dispatch(fetchShowFailure(error));
       });
   }

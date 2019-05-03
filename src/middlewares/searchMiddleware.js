@@ -13,9 +13,7 @@ import {
 } from '../actions';
 import { search } from '../api';
 
-export default (store) => next => action => {
-  console.log(action);
-
+export default store => next => action => {
   if (action.type === fetchSearchRequest.toString()) {
     search(action.payload)
       .then(data => {
