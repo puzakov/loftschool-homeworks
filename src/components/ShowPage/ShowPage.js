@@ -36,26 +36,25 @@ class ShowPage extends Component {
         {!isFetching &&
           entities.length > 0 &&
           entities.map(entity => {
-            if (entity.id == id) {
-              return (
-                <div key={entity.id}>
-                  <p>{entity.name}</p>
-                  <img src={entity.image.medium} alt={entity.name} />
-                  <div dangerouslySetInnerHTML={{ __html: entity.summary }} />
-                  <div className={styles.cast}>
-                    {entity._embedded.cast.map(item => (
-                      <div className="t-person" key={item.person.id}>
-                        <p>{item.person.name}</p>
-                        <img
-                          src={item.person.image.medium}
-                          alt={item.person.name}
-                        />
-                      </div>
-                    ))}
-                  </div>
+            if (entity.id != id) return null;
+            return (
+              <div key={entity.id}>
+                <p>{entity.name}</p>
+                <img src={entity.image.medium} alt={entity.name} />
+                <div dangerouslySetInnerHTML={{ __html: entity.summary }} />
+                <div className={styles.cast}>
+                  {entity._embedded.cast.map(item => (
+                    <div className="t-person" key={item.person.id}>
+                      <p>{item.person.name}</p>
+                      <img
+                        src={item.person.image.medium}
+                        alt={item.person.name}
+                      />
+                    </div>
+                  ))}
                 </div>
-              );
-            }
+              </div>
+            );
           })}
       </>
     );
