@@ -6,7 +6,7 @@ import {
   fetchPhotosFailure
 } from '../actions';
 
-const reducerMap = rover => {
+function reducerMap(rover) {
   return {
     [fetchPhotosRequest]: (state, { payload: { name, sol } }) => {
       if (rover !== name) return state;
@@ -26,11 +26,13 @@ const reducerMap = rover => {
       if (rover !== name) return state;
       return {
         ...state,
-        [sol]: { isLoaded: false, isLoading: false }
+        [sol]: { ...state[sol], isLoaded: false, isLoading: false }
       };
     }
   };
-};
+}
+
+export const getRovers = state => state.roverPhotos.photos;
 
 export default combineReducers({
   curiosity: handleActions({ ...reducerMap('curiosity') }, {}),
